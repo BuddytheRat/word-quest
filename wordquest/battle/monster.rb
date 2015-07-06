@@ -5,7 +5,7 @@ class Monster
     @level = level
     file = File.open("5desk.txt") do |f|
       words = f.readlines
-      words = words.select { |word| word.length >= 5 && word.length <= @level + 5 && word[0] =~ /[a=z]/ }
+      words = words.select { |word| word.length >= 6 && word.length <= @level + 6 && word[0] =~ /[a=z]/ }
       @word = words.sample.split('')[0..-2]
       @blanks = '_' * @word.length
     end
@@ -27,11 +27,11 @@ class Monster
   def attack
     @level + rand(@level)
   end
-
+  
   def check_letter(letter)
     matches = 0
     @word.each_with_index do |char, i|
-      if letter.to_s.downcase == char.to_s.downcase
+      if letter.downcase == char.to_s.downcase
         fill_blank(i, char)
         @word[i] = nil
         matches += 1

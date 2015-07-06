@@ -2,6 +2,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 
 class WordQuest
   require 'wordquest/player'
+  require 'wordquest/scene'
   require 'wordquest/battle'
 
   def initialize

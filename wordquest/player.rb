@@ -1,5 +1,5 @@
 class Player
-  attr_reader :name, :level, :last_input
+  attr_reader :name, :level, :hp, :last_input
   def initialize
     # do some stuff
     @level = 1

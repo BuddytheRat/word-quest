@@ -1,18 +1,20 @@
-class Battle
+class Battle < Scene
   require_relative 'battle/monster'
   def initialize(player)
+    super()
     @player = player
     @monster = Monster.new('Slime', @player.level)
-    @battle_string = Array.new
-    @round = 1
-    @battle_over = false
+    @round = 0
   end
 
   def step
     alert("#{@monster.word.join}")
     #Battle Round
-    if @round > 1 && !@monster.is_dead?
-      matches = @monster.check_letter(@player.last_input)
+    if @round >= 1 && !@monster.is_dead?
+      matches = @monster.check_letter(@player.last_input) if @round > 1
+      alert("#{@player.name}: Level #{@player.level}, #{@player.hp} HP\n")
+      alert("#{@monster.name}: Level #{@monster.level}, #{@monster.hp} HP\n")
+      alert("#{@monster.blanks}\n")
       case matches
       when 0
         alert("#{@player.name} missed!")
@@ -21,47 +23,23 @@ class Battle
       when 2
         alert("#{@player.name} scores a critical hit!")
       end
-      if !@monster.is_dead?
+      if !@monster.is_dead? && @round > 1
         damage = @monster.attack
         @player.damage(damage)
         alert("#{@monster.name} hit #{@player.name} for #{damage} HP!")
       end
     #Battle Start
-    elsif @round == 1
+    elsif @round == 0
       alert("You encounter a wild #{@monster.name}!")
+      alert("Press enter to continue!")
     end
     #Battle End
     if @monster.is_dead?
       alert("#{@monster.name} falls!")
       # player gains XP and gold
       alert("Press enter to continue!")
-      @battle_over = true
+      @scene_over = true
     end
     @round += 1
   end
-
-  def is_over?
-    @battle_over
-  end
-
-  # return string for displaying battle info
-  def display
-    string = "#{@monster.name}: Level #{@monster.level} - #{@monster.hp} HP\n\n",
-             "#{@monster.blanks}\n\n",
-             "#{battle_string}"
-  end
-
-  private
-  def alert(alert)
-    @battle_string << alert
-  end
-
-  def battle_string
-    string = String.new
-    @battle_string.length.times do |i|
-      string << @battle_string.shift + "\n"
-    end
-    string
-  end
-
 end
