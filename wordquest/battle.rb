@@ -8,7 +8,6 @@ class Battle < Scene
   end
 
   def step
-    alert("#{@monster.word.join}")
     #Battle Round
     if @round >= 1 && !@monster.is_dead?
       matches = @monster.check_letter(@player.last_input) if @round > 1
@@ -35,8 +34,9 @@ class Battle < Scene
     end
     #Battle End
     if @monster.is_dead?
+      @player.gain_xp(@xp)
+      @player.gain_gold(@gold)
       alert("#{@monster.name} falls!")
-      # player gains XP and gold
       alert("Press enter to continue!")
       @scene_over = true
     end

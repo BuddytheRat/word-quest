@@ -1,5 +1,5 @@
 class Monster
-  attr_reader :name, :level, :blanks, :hp, :word
+  attr_reader :name, :level, :blanks, :hp, :xp, :word
   def initialize(name, level)
     @name = name
     @level = level
@@ -10,6 +10,8 @@ class Monster
       @blanks = '_' * @word.length
     end
     @hp = @word.length
+    @xp = @level * 3
+    @gold = rand(@level * 3)
   end
 
   def fill_blank(i, char)
@@ -25,9 +27,9 @@ class Monster
   end
 
   def attack
-    @level + rand(@level)
+    rand(@level * 3)
   end
-  
+
   def check_letter(letter)
     matches = 0
     @word.each_with_index do |char, i|

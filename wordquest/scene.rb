@@ -18,9 +18,7 @@ class Scene
   end
 
 	def display
-		display_string = String.new
-		@display_queue.each { |str| display_string += str + "\n" }
+		@display_queue.each { |str| puts str }
     @display_queue.clear
-		display_string
 	end
 end

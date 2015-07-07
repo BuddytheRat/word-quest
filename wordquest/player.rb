@@ -4,13 +4,23 @@ class Player
     # do some stuff
     @level = 1
     @name = "Def"
-    @hp = 100
+    @hp = 10
+    @xp = 0
+    @gold = 10
     @last_input = String.new
   end
 
   def set_name
     input
     @name = @last_input
+  end
+
+  def gain_xp(xp)
+    @xp += xp
+  end
+
+  def gain_gold(gold)
+    @gold += gold
   end
 
   def damage(damage)
