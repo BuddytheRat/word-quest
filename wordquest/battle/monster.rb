@@ -5,7 +5,7 @@ class Monster
     @level = level
     file = File.open("5desk.txt") do |f|
       words = f.readlines
-      words = words.select { |word| word.length >= 6 && word.length <= @level + 6 && word[0] =~ /[a=z]/ }
+      words = words.select { |word| word.length >= 6 && word.length <= @level + 6 && word[0] =~ /[a-z]/ }
       @word = words.sample.split('')[0..-2]
       @blanks = '_' * @word.length
     end
@@ -37,9 +37,9 @@ class Monster
         fill_blank(i, char)
         @word[i] = nil
         matches += 1
-        @hp -= matches
       end
     end
+    @hp -= matches
     matches
   end
 end

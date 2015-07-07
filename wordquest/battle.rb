@@ -1,5 +1,6 @@
 class Battle < Scene
   require_relative 'battle/monster'
+  require 'set'
   def initialize(player, title, subtitle)
     super(title, subtitle, nil)
     @player = player
@@ -11,46 +12,76 @@ class Battle < Scene
     input.length == 1 && input =~ /[a-z]/i
   end
 
-  def step
-    #Battle Start
-    title_string
-    alert(@monster.word.join(''))
-    if @frame == 0
-      alert("You encounter a wild #{@monster.name}!")
-      alert("Press enter to continue!")
-    elsif @frame > 1 && !input_valid?(@player.last_input)
-      alert("Sorry, that input isn't valid! Try again?")  
-    elsif @frame >= 1 && !@monster.is_dead?
-    #Battle Round
-      #verify_input
-      matches = @monster.check_letter(@player.last_input) if @frame > 1
-      @guesses << @player.last_input if @frame > 1
-      alert("#{@player.name}: Level #{@player.level}, #{@player.hp} HP")
-      alert("#{@monster.name}: Level #{@monster.level}, #{@monster.hp} HP")
-      alert("#{@monster.blanks}")
-      case matches
+  def battle_info_str
+    alert("#{@player.name}: Level #{@player.level}, #{@player.hp} HP")
+    alert("#{@monster.name}: Level #{@monster.level}, #{@monster.hp} HP")
+    alert("#{@monster.blanks}")
+  end
+
+  #Display Strings
+  def player_attack_str(matches)
+    case matches
       when 0
         alert("#{@player.name} missed!")
       when 1
         alert("#{@player.name} hits the monster!")
-      when 2
+      else
         alert("#{@player.name} scores a critical hit!")
-      end
+    end 
+  end
+
+  def damage_str(damage)
+    alert("#{@monster.name} hit #{@player.name} for #{damage} HP!", 2)
+  end
+
+  def guesses_str
+    alert("Guesses: #{@guesses.join(' ').to_s.upcase}")
+  end
+
+  def battle_end_str
+    alert("#{@monster.name} falls!")
+    alert("Gained #{@monster.xp} XP!")
+    alert("Gained #{@monster.gold} gold!")
+    alert("Press enter to continue...")
+  end
+
+  def battle_begin_str
+    alert("You encounter a wild #{@monster.name}!")
+    alert("Press enter to continue!")
+  end
+
+  def invalid_input_str
+    alert("Sorry, that input isn't valid! Try again?")  
+  end
+
+  #Logic
+  def step
+    #Battle Start
+    title_string
+    alert(@monster.word.join(''))#DEBUG
+    if @frame == 0
+      battle_begin_str
+    #Invalid Input
+    elsif @frame > 1 && !input_valid?(@player.last_input)
+      invalid_input_str
+    #Battle Round
+    elsif @frame >= 1 && !@monster.is_dead?
+      matches = @monster.check_letter(@player.last_input) if @frame > 1
+      @guesses << @player.last_input if @frame > 1 && !@guesses.include?(@player.last_input)
+      battle_info_str
+      player_attack_str(matches)
       if !@monster.is_dead? && @frame > 1
         damage = @monster.attack
         @player.damage(damage)
-        alert("#{@monster.name} hit #{@player.name} for #{damage} HP!", 2)
+        damage_str(damage)
       end
-      alert("Guesses: #{@guesses.join(' ').to_s.upcase}")
+      guesses_str
     end
     #Battle End
     if @monster.is_dead?
       @player.gain_xp(@monster.xp)
       @player.gain_gold(@monster.gold)
-      alert("#{@monster.name} falls!")
-      alert("Gained #{@monster.xp} XP!")
-      alert("Gained #{@monster.gold} gold!")
-      alert("Press enter to continue...")
+      battle_end_str
       @scene_over = true
     end
     super
