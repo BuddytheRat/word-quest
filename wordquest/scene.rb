@@ -2,6 +2,7 @@ class Scene
 	def initialize
 		@display_queue = Array.new
 		@scene_over = false
+    @frame = 0
 	end
 
 	def is_over?
@@ -9,7 +10,7 @@ class Scene
 	end
 
 	def step
-
+    @frame += 1
 	end
 
   def alert(alert)

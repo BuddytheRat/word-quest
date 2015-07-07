@@ -4,13 +4,12 @@ class Battle < Scene
     super()
     @player = player
     @monster = Monster.new('Slime', @player.level)
-    @round = 0
   end
 
   def step
     #Battle Round
-    if @round >= 1 && !@monster.is_dead?
-      matches = @monster.check_letter(@player.last_input) if @round > 1
+    if @frame >= 1 && !@monster.is_dead?
+      matches = @monster.check_letter(@player.last_input) if @frame > 1
       alert("#{@player.name}: Level #{@player.level}, #{@player.hp} HP\n")
       alert("#{@monster.name}: Level #{@monster.level}, #{@monster.hp} HP\n")
       alert("#{@monster.blanks}\n")
@@ -22,13 +21,13 @@ class Battle < Scene
       when 2
         alert("#{@player.name} scores a critical hit!")
       end
-      if !@monster.is_dead? && @round > 1
+      if !@monster.is_dead? && @frame > 1
         damage = @monster.attack
         @player.damage(damage)
         alert("#{@monster.name} hit #{@player.name} for #{damage} HP!")
       end
     #Battle Start
-    elsif @round == 0
+    elsif @frame == 0
       alert("You encounter a wild #{@monster.name}!")
       alert("Press enter to continue!")
     end
@@ -40,6 +39,6 @@ class Battle < Scene
       alert("Press enter to continue!")
       @scene_over = true
     end
-    @round += 1
+    @frame += 1
   end
 end
