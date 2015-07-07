@@ -14,3 +14,12 @@ When the program first loads, add in an option that allows you to open one of yo
 ------------------------
 
 Word Quest!
+
+Turning Hangman into an RPG quest!
+Each word is a monster. Getting a letter wrong means your attack missed!
+Guessing the word will slay the monster, awarding gold and xp!
+
+#planned features
+Buy and use items!
+Cast spells!
+Follow a plot of some sort!
