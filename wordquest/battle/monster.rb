@@ -1,5 +1,5 @@
 class Monster
-  attr_reader :name, :level, :blanks, :hp, :xp, :word
+  attr_reader :name, :level, :blanks, :hp, :xp, :gold, :word
   def initialize(name, level)
     @name = name
     @level = level
@@ -9,7 +9,7 @@ class Monster
       @word = words.sample.split('')[0..-2]
       @blanks = '_' * @word.length
     end
-    @hp = @word.length
+    @hp = @word.size
     @xp = @level * 3
     @gold = rand(@level * 3)
   end

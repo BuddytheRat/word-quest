@@ -3,7 +3,7 @@ class Player
   def initialize
     # do some stuff
     @level = 1
-    @name = "Def"
+    @name = "Deef"
     @hp = 10
     @xp = 0
     @gold = 10

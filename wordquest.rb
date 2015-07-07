@@ -12,7 +12,9 @@ class WordQuest
     @player.set_name
 
     @display_queue = Array.new
-    @scenes = [Battle.new(@player), Battle.new(@player), Battle.new(@player)]
+    @scenes = [Battle.new(@player, 'Open Field', 'Outside of Town'),
+               Battle.new(@player, 'Fiery Magma Pit', 'The Belly of Mt. Ogris'),
+               Battle.new(@player, 'Deck of the Pinnacle', 'The Eastern Sea')]
     game_loop
   end
 
