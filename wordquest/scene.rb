@@ -12,17 +12,17 @@ class Scene
 		@scene_over = false
     @frame = 0
 
-    symbol ||= "#{@@id}_#{title.gsub(' ', '_').downcase}".to_sym
-    @@scenes[symbol] = self
+    @symbol ||= "#{@@id}_#{title.gsub(' ', '_').downcase}".to_sym
+    @@scenes[@symbol] = self
     @@id += 1
 	end
 
-  def Scene.current_scene
+  def Scene.current
     @@scenes[@@scene_queue.first]
   end
 
-  def Scene.queue_next(scene)
-    @@scene_queue.insert(1, scene)
+  def Scene.queue_next(symbol)
+    @@scene_queue.insert(1, symbol)
   end
 
   def Scene.next_scene
@@ -31,6 +31,10 @@ class Scene
 
   def Scene.all
     @@scenes.keys
+  end
+
+  def queue
+    @@scene_queue << @symbol
   end
 
 	def step

@@ -32,7 +32,17 @@ class Player
     @hp <= 0 ? true : false
   end
 
-  def input
-    @last_input = gets.chomp
+  def input_command
+    input = gets.chomp
+    if !(input.length == 1 && input =~ /[a-z]/i)
+      puts "Input Invalid"
+      input = input_command
+    end
+    @last_input = input
+    return input
+  end
+
+  def confirm
+    gets.chomp
   end
 end

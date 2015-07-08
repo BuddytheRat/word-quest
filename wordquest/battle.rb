@@ -7,10 +7,6 @@ class Battle < Scene
     @guesses = Array.new
   end
 
-  def input_valid?(input)
-    input.length == 1 && input =~ /[a-z]/i
-  end
-
   def battle_info_str
     alert("#{@player.name}: Level #{@player.level}, #{@player.hp} HP")
     alert("#{@monster.name}: Level #{@monster.level}, #{@monster.hp} HP")
@@ -49,26 +45,15 @@ class Battle < Scene
     alert("Press enter to continue!")
   end
 
-  def invalid_input_str
-    alert("Sorry, that input isn't valid! Try again?")  
-  end
-
-  def player_loss_str
-    alert("#{@player.name} has perished!")
-    alert("Game Over")
-  end
-
   #Logic
   def step
+    super
     #Battle Start
     title_string
     alert(@monster.word.join(''))
     if @frame == 0
       battle_begin_str
-
-    #Invalid Input
-    elsif @frame > 1 && !input_valid?(@player.last_input)
-      invalid_input_str
+      @player.confirm
 
     #Battle Round
     elsif @frame >= 1 && !@monster.is_dead?
@@ -86,13 +71,14 @@ class Battle < Scene
 
     #Battle End
     if @player.is_dead?
-      self.jump_to(:gameover)
+      Scene.jump_to(:gameover)
     elsif @monster.is_dead?
       @player.gain_xp(@monster.xp)
       @player.gain_gold(@monster.gold)
       battle_end_str
-      self.next_scene
+      Scene.next_scene
+      @player.confirm
     end
-    super
+    @player.input_command
   end
 end
