@@ -24,7 +24,7 @@ class Battle < Scene
         alert("#{@player.name} missed!")
       when 1
         alert("#{@player.name} hits the monster!")
-      else
+      when 2
         alert("#{@player.name} scores a critical hit!")
     end 
   end
@@ -62,7 +62,6 @@ class Battle < Scene
   def step
     #Battle Start
     title_string
-    alert(@monster.word.join(''))#DEBUG
     if @frame == 0
       battle_begin_str
     #Invalid Input
