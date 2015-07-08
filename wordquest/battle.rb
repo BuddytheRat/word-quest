@@ -62,12 +62,14 @@ class Battle < Scene
   def step
     #Battle Start
     title_string
-    alert(@monster.word.join(''))#DEBUG
+    alert(@monster.word.join(''))
     if @frame == 0
       battle_begin_str
+
     #Invalid Input
     elsif @frame > 1 && !input_valid?(@player.last_input)
       invalid_input_str
+
     #Battle Round
     elsif @frame >= 1 && !@monster.is_dead?
       matches = @monster.check_letter(@player.last_input) if @frame > 1
@@ -81,14 +83,15 @@ class Battle < Scene
       end
       guesses_str
     end
+
     #Battle End
     if @player.is_dead?
-      @jump_to = @@scenes[:gameover]
+      self.jump_to(:gameover)
     elsif @monster.is_dead?
       @player.gain_xp(@monster.xp)
       @player.gain_gold(@monster.gold)
       battle_end_str
-      @scene_over = true
+      self.next_scene
     end
     super
   end

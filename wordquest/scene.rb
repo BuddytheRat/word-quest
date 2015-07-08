@@ -1,5 +1,6 @@
 class Scene
   @@scenes = Hash.new
+  @@scene_queue = Array.new
   @@id = 1
 
   attr_reader :jump_to
@@ -9,7 +10,6 @@ class Scene
     @description = description
 		@display_queue = Array.new
 		@scene_over = false
-    @jump_to = nil
     @frame = 0
 
     symbol ||= "#{@@id}_#{title.gsub(' ', '_').downcase}".to_sym
@@ -17,23 +17,27 @@ class Scene
     @@id += 1
 	end
 
-	def is_over?
-		@scene_over
-	end
+  def Scene.current_scene
+    @@scenes[@@scene_queue.first]
+  end
 
-  def jumping?
-    @jump_to
+  def Scene.queue_next(scene)
+    @@scene_queue.insert(1, scene)
+  end
+
+  def Scene.next_scene
+    @@scene_queue.shift
+  end
+
+  def Scene.all
+    @@scenes.keys
   end
 
 	def step
     @frame += 1
 	end
 
-  def end_scene
-  end
-
   def alert(alert, newlines = 0)
-    #puts @display_queue.class
     @display_queue << alert + "\n" * newlines
   end
 
