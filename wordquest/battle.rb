@@ -1,6 +1,5 @@
 class Battle < Scene
   require_relative 'battle/monster'
-  require 'set'
   def initialize(player, title, subtitle)
     super(title, subtitle, nil)
     @player = player
@@ -54,6 +53,11 @@ class Battle < Scene
     alert("Sorry, that input isn't valid! Try again?")  
   end
 
+  def player_loss_str
+    alert("#{@player.name} has perished!")
+    alert("Game Over")
+  end
+
   #Logic
   def step
     #Battle Start
@@ -78,7 +82,9 @@ class Battle < Scene
       guesses_str
     end
     #Battle End
-    if @monster.is_dead?
+    if @player.is_dead?
+      @jump_to = @@scenes[:gameover]
+    elsif @monster.is_dead?
       @player.gain_xp(@monster.xp)
       @player.gain_gold(@monster.gold)
       battle_end_str

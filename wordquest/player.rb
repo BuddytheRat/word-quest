@@ -3,13 +3,14 @@ class Player
   def initialize
     # do some stuff
     @level = 1
-    @name = "Deef"
+    @name = "Dee"
     @hp = 10
     @xp = 0
     @gold = 10
+    @items = Array.new
     @last_input = String.new
   end
-
+ 
   def set_name
     input
     @name = @last_input
@@ -25,6 +26,10 @@ class Player
 
   def damage(damage)
     @hp -= damage
+  end
+
+  def is_dead?
+    @hp <= 0 ? true : false
   end
 
   def input
