@@ -26,8 +26,12 @@ class Monster
     @hp <= 0 ? true : false
   end
 
+  def is_alive?
+    @hp > 0 ? true: false
+  end
+
   def attack
-    rand(@level * 3)
+    @level + rand(@level * 3)
   end
 
   def check_letter(letter)

@@ -3,38 +3,28 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 class WordQuest
   require 'wordquest/player'
   require 'wordquest/scene'
-  require 'wordquest/scenes'
   require 'wordquest/battle'
 
   def initialize
     # Start or load game here
     @player = Player.new
-    #puts "What is your name?"
-    #@player.set_name
 
-    @display_queue = Array.new
-
-    Battle.new(@player, 'Open Field', 'Outside of Town').queue
-    Battle.new(@player, 'Deck of the Pinnacle', 'The Eastern Sea').queue
-    Battle.new(@player, 'Fiery Magma Pit', 'The Belly of Mt. Ogris').queue
-    Victory.new.queue
-
-    GameOver.new
-
-    puts Scene.all.to_s
+    Battle.new(@player, 'Open Field', 'Outside of Town', Monster.new('Slime', @player.level)).queue
+    Battle.new(@player, 'Deck of the Pinnacle', 'The Eastern Sea', Monster.new('Skeleton Pirate', @player.level+1)).queue
+    Battle.new(@player, 'Fiery Magma Pit', 'The Belly of Mt. Ogris', Monster.new('Dragon', @player.level+2)).queue
+    Scene.new(@player, 'Victory', 'You have fulfilled the prophecy!',
+               "With your enemies slain, your village is now safe.\n\n\ Congratulations!").queue
+    Scene.new(@player, 'Game Over', 'You Died',
+               "You have fallen in battle..\n\nAll is lost..",
+               :gameover)
 
     game_loop
   end
 
-  def refresh_screen
-    system('cls')
-    Scene.current.display
-  end
-
   def game_loop
     loop do
+      system('cls')
       Scene.current.step
-      refresh_screen
     end
   end
 end

@@ -1,14 +1,14 @@
 class Scene
   @@scenes = Hash.new
   @@scene_queue = Array.new
-  @@id = 1
+  @@id = 0
 
-  attr_reader :jump_to
-	def initialize(title, subtitle, description, symbol = nil)
+	def initialize(player, title, subtitle, description, symbol = nil)
+    @player = player
     @title = title
     @subtitle = subtitle
     @description = description
-		@display_queue = Array.new
+    @symbol = symbol
 		@scene_over = false
     @frame = 0
 
@@ -21,6 +21,10 @@ class Scene
     @@scenes[@@scene_queue.first]
   end
 
+  def queue
+    @@scene_queue << @symbol
+  end
+
   def Scene.queue_next(symbol)
     @@scene_queue.insert(1, symbol)
   end
@@ -29,32 +33,27 @@ class Scene
     @@scene_queue.shift
   end
 
+  def Scene.jump_to(symbol)
+    @@scene_queue.unshift(symbol)
+  end
+
   def Scene.all
     @@scenes.keys
   end
 
-  def queue
-    @@scene_queue << @symbol
-  end
-
 	def step
     @frame += 1
+    puts title_string
+    puts description
+    @player.confirm
+    Scene.next_scene
 	end
 
-  def alert(alert, newlines = 0)
-    @display_queue << alert + "\n" * newlines
-  end
-
   def title_string
-    alert("#{@title} - #{@subtitle}", 2)
+    "#{@title} - #{@subtitle}\n\n"
   end
 
   def description
-    alert("#{@description}")
+    "#{@description}"
   end
-
-	def display
-		@display_queue.each { |str| puts str }
-    @display_queue.clear
-	end
 end
