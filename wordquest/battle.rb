@@ -1,94 +1,62 @@
 class Battle < Scene
   require_relative 'battle/monster'
-  def initialize(player, title, subtitle)
-    super(title, subtitle, nil)
-    @player = player
-    @monster = Monster.new('Slime', @player.level)
+  def initialize(player, title, subtitle, monster, symbol = nil)
+    super(player, title, subtitle, symbol)
+    @monster = monster
     @guesses = Array.new
   end
 
-  def input_valid?(input)
-    input.length == 1 && input =~ /[a-z]/i
+  def battle_intro
+    puts "You encounter a wild #{@monster.name}!"
+    puts "Press enter to continue..."
+    @player.confirm
   end
 
-  def battle_info_str
-    alert("#{@player.name}: Level #{@player.level}, #{@player.hp} HP")
-    alert("#{@monster.name}: Level #{@monster.level}, #{@monster.hp} HP")
-    alert("#{@monster.blanks}")
+  def battle_round
+    matches = @monster.check_letter(@player.last_input)
+    puts "#{@monster.name}: #{@monster.hp} HP, Level #{@monster.level}"
+    puts "#{@player.name}: #{@player.hp} HP, Level #{@player.level}"
+    puts
+    puts "#{@monster.blanks}"
+    puts
+    round_results(matches) if @frame > 2
+    puts "GUESSES: #{@guesses.join(' ')}"
+    if @monster.is_dead? && @player.is_alive?
+      battle_end
+    else
+      @guesses << @player.input_command
+    end
   end
 
-  #Display Strings
-  def player_attack_str(matches)
-    case matches
-      when 0
-        alert("#{@player.name} missed!")
-      when 1
-        alert("#{@player.name} hits the monster!")
-      when 2
-        alert("#{@player.name} scores a critical hit!")
-    end 
+  def round_results(matches)
+    if matches == 0
+      damage = @monster.attack
+      @player.damage(damage)
+      puts "#{@monster.name} hits #{@player.name} for #{damage} damage!"
+    end
+    puts "#{@player.name} hits #{@monster.name} for #{matches} damage!" if matches == 1
+    puts "Critical hit on #{@monster.name}! #{matches} damage!" if matches > 1
+    puts
   end
 
-  def damage_str(damage)
-    alert("#{@monster.name} hit #{@player.name} for #{damage} HP!", 2)
+  def battle_end
+    @player.reset_input
+    @player.gain_gold(@monster.gold)
+    @player.gain_xp(@monster.xp)
+    puts "#{@monster.name} falls!"
+    puts "#{@player.name} gains:"
+    puts "    #{@monster.gold} gold!"
+    puts "    #{@monster.xp} xp!"
+    puts "Press enter to continue..."
+    @player.confirm
+    Scene.next_scene
   end
 
-  def guesses_str
-    alert("Guesses: #{@guesses.join(' ').to_s.upcase}")
-  end
-
-  def battle_end_str
-    alert("#{@monster.name} falls!")
-    alert("Gained #{@monster.xp} XP!")
-    alert("Gained #{@monster.gold} gold!")
-    alert("Press enter to continue...")
-  end
-
-  def battle_begin_str
-    alert("You encounter a wild #{@monster.name}!")
-    alert("Press enter to continue!")
-  end
-
-  def invalid_input_str
-    alert("Sorry, that input isn't valid! Try again?")  
-  end
-
-  def player_loss_str
-    alert("#{@player.name} has perished!")
-    alert("Game Over")
-  end
-
-  #Logic
   def step
-    #Battle Start
-    title_string
-    if @frame == 0
-      battle_begin_str
-    #Invalid Input
-    elsif @frame > 1 && !input_valid?(@player.last_input)
-      invalid_input_str
-    #Battle Round
-    elsif @frame >= 1 && !@monster.is_dead?
-      matches = @monster.check_letter(@player.last_input) if @frame > 1
-      @guesses << @player.last_input if @frame > 1 && !@guesses.include?(@player.last_input)
-      battle_info_str
-      player_attack_str(matches)
-      if !@monster.is_dead? && @frame > 1
-        damage = @monster.attack
-        @player.damage(damage)
-        damage_str(damage)
-      end
-      guesses_str
-    end
-    #Battle End
-    if @player.is_dead?
-      @jump_to = @@scenes[:gameover]
-    elsif @monster.is_dead?
-      @player.gain_xp(@monster.xp)
-      @player.gain_gold(@monster.gold)
-      battle_end_str
-      @scene_over = true
-    end
-    super
+    @frame += 1
+    puts title_string
+    battle_intro if @frame == 1
+    battle_round if @frame > 1 && @monster.is_alive? && @player.is_alive?
+    Scene.jump_to(:gameover) if @player.is_dead?
   end
 end

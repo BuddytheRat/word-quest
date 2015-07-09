@@ -1,52 +1,59 @@
 class Scene
   @@scenes = Hash.new
-  @@id = 1
+  @@scene_queue = Array.new
+  @@id = 0
 
-  attr_reader :jump_to
-	def initialize(title, subtitle, description, symbol = nil)
+	def initialize(player, title, subtitle, description, symbol = nil)
+    @player = player
     @title = title
     @subtitle = subtitle
     @description = description
-		@display_queue = Array.new
+    @symbol = symbol
 		@scene_over = false
-    @jump_to = nil
     @frame = 0
 
-    symbol ||= "#{@@id}_#{title.gsub(' ', '_').downcase}".to_sym
-    @@scenes[symbol] = self
+    @symbol ||= "#{@@id}_#{title.gsub(' ', '_').downcase}".to_sym
+    @@scenes[@symbol] = self
     @@id += 1
 	end
 
-	def is_over?
-		@scene_over
-	end
+  def Scene.current
+    @@scenes[@@scene_queue.first]
+  end
 
-  def jumping?
-    @jump_to
+  def queue
+    @@scene_queue << @symbol
+  end
+
+  def Scene.queue_next(symbol)
+    @@scene_queue.insert(1, symbol)
+  end
+
+  def Scene.next_scene
+    @@scene_queue.shift
+  end
+
+  def Scene.jump_to(symbol)
+    @@scene_queue.unshift(symbol)
+  end
+
+  def Scene.all
+    @@scenes.keys
   end
 
 	def step
     @frame += 1
+    puts title_string
+    puts description
+    @player.confirm
+    Scene.next_scene
 	end
 
-  def end_scene
-  end
-
-  def alert(alert, newlines = 0)
-    #puts @display_queue.class
-    @display_queue << alert + "\n" * newlines
-  end
-
   def title_string
-    alert("#{@title} - #{@subtitle}", 2)
+    "#{@title} - #{@subtitle}\n\n"
   end
 
   def description
-    alert("#{@description}")
+    "#{@description}"
   end
-
-	def display
-		@display_queue.each { |str| puts str }
-    @display_queue.clear
-	end
 end

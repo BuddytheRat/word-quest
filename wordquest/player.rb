@@ -3,8 +3,8 @@ class Player
   def initialize
     # do some stuff
     @level = 1
-    @name = "Dee"
-    @hp = 10
+    @name = "Hero"
+    @hp = 100
     @xp = 0
     @gold = 10
     @items = Array.new
@@ -14,6 +14,10 @@ class Player
   def set_name
     input
     @name = @last_input
+  end
+
+  def reset_input
+    @last_input = String.new
   end
 
   def gain_xp(xp)
@@ -32,7 +36,21 @@ class Player
     @hp <= 0 ? true : false
   end
 
-  def input
-    @last_input = gets.chomp
+  def is_alive?
+    @hp > 0 ? true: false
+  end
+
+  def input_command
+    input = gets.chomp
+    if !(input.length == 1 && input =~ /[a-z]/i)
+      puts "Input Invalid"
+      input = input_command
+    end
+    @last_input = input
+    return input
+  end
+
+  def confirm
+    gets.chomp
   end
 end
