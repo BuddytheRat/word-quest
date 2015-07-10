@@ -42,11 +42,20 @@ class Player
 
   def input_command
     input = gets.chomp
-    if !(input.length == 1 && (input =~ /[a-z]/i || input == '!'))
-      puts "Input Invalid"
+    if !(input.length == 1 && (input =~ /[a-z]/i))
+      puts "Sorry, that input was invalid. Try again?"
       input = input_command
     end
     @last_input = input
+    return input
+  end
+
+  def prompt(options)
+    input = gets.chomp
+    if !options.include?(input)
+      puts "Sorry, that isn't one of the options. Try again?"
+      input = prompt(options)
+    end
     return input
   end
 

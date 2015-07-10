@@ -1,0 +1,120 @@
+---
+- :mainmenu: !ruby/object:MainMenu
+    player: &1 !ruby/object:Player
+      level: 1
+      name: Hero
+      hp: 95
+      xp: 0
+      gold: 10
+      items: []
+      last_input: a
+    title: WordQuest
+    subtitle: The Path to Mt. Ogris
+    description: ''
+    symbol: :mainmenu
+    scene_over: false
+    frame: 1
+    game_file: true
+  :1_open_field: !ruby/object:Battle
+    player: *1
+    title: Open Field
+    subtitle: Outside of Town
+    description: 
+    symbol: :1_open_field
+    scene_over: false
+    frame: 8
+    monster: !ruby/object:Monster
+      name: Slime
+      level: 1
+      word:
+      - 
+      - u
+      - b
+      - b
+      - l
+      - 
+      blanks: r____e
+      hp: 4
+      xp: 3
+      gold: 1
+    guesses:
+    - e
+    - e
+    - w
+    - a
+    - r
+    - a
+  :2_deck_of_the_pinnacle: !ruby/object:Battle
+    player: *1
+    title: Deck of the Pinnacle
+    subtitle: The Eastern Sea
+    description: 
+    symbol: :2_deck_of_the_pinnacle
+    scene_over: false
+    frame: 0
+    monster: !ruby/object:Monster
+      name: Skeleton Pirate
+      level: 2
+      word:
+      - m
+      - u
+      - s
+      - s
+      - i
+      - l
+      - y
+      blanks: _______
+      hp: 7
+      xp: 6
+      gold: 0
+    guesses: []
+  :3_fiery_magma_pit: !ruby/object:Battle
+    player: *1
+    title: Fiery Magma Pit
+    subtitle: The Belly of Mt. Ogris
+    description: 
+    symbol: :3_fiery_magma_pit
+    scene_over: false
+    frame: 0
+    monster: !ruby/object:Monster
+      name: Dragon
+      level: 3
+      word:
+      - m
+      - e
+      - t
+      - h
+      - a
+      - n
+      - e
+      blanks: _______
+      hp: 7
+      xp: 9
+      gold: 4
+    guesses: []
+  :4_victory: !ruby/object:Scene
+    player: *1
+    title: Victory
+    subtitle: You have fulfilled the prophecy!
+    description: |-
+      With your enemies slain, your village is now safe.
+
+       Congratulations!
+    symbol: :4_victory
+    scene_over: false
+    frame: 0
+  :gameover: !ruby/object:Scene
+    player: *1
+    title: Game Over
+    subtitle: You Died
+    description: |-
+      You have fallen in battle..
+
+      All is lost..
+    symbol: :gameover
+    scene_over: false
+    frame: 0
+- - :1_open_field
+  - :2_deck_of_the_pinnacle
+  - :3_fiery_magma_pit
+  - :4_victory
