@@ -42,7 +42,7 @@ class Player
 
   def input_command
     input = gets.chomp
-    if !(input.length == 1 && input =~ /[a-z]/i)
+    if !(input.length == 1 && (input =~ /[a-z]/i || input == '!'))
       puts "Input Invalid"
       input = input_command
     end

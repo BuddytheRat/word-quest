@@ -41,6 +41,23 @@ class Scene
     @@scenes.keys
   end
 
+  def Scene.save
+    scene_data = [@@scenes, @@scene_queue]
+    save = YAML.dump(scene_data)
+    game_file = File.new('save.yml', 'w')
+    game_file.write save
+    game_file.close
+  end
+
+  def Scene.load
+    if File.exist?('save.yml')
+      game_file = File.new('save.yml', 'r')
+      scene_data = YAML.load(game_file)
+      @@scenes = scene_data[0]
+      @@scene_queue = scene_data[1]
+    end
+  end
+
 	def step
     @frame += 1
     puts title_string

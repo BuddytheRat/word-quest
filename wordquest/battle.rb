@@ -20,7 +20,7 @@ class Battle < Scene
     puts "#{@monster.blanks}"
     puts
     round_results(matches) if @frame > 2
-    puts "GUESSES: #{@guesses.join(' ')}"
+    puts "GUESSES: #{@guesses.sort.join(' ').upcase}"
     if @monster.is_dead? && @player.is_alive?
       battle_end
     else
@@ -55,6 +55,7 @@ class Battle < Scene
   def step
     @frame += 1
     puts title_string
+    Scene.save
     battle_intro if @frame == 1
     battle_round if @frame > 1 && @monster.is_alive? && @player.is_alive?
     Scene.jump_to(:gameover) if @player.is_dead?

@@ -1,6 +1,7 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 
 class WordQuest
+  require 'YAML'
   require 'wordquest/player'
   require 'wordquest/scene'
   require 'wordquest/battle'
@@ -18,12 +19,14 @@ class WordQuest
                "You have fallen in battle..\n\nAll is lost..",
                :gameover)
 
+    Scene.load
     game_loop
   end
 
   def game_loop
     loop do
       system('cls')
+      #Scene.save
       Scene.current.step
     end
   end
